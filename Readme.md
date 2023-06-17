@@ -35,3 +35,4 @@ Major parts
 
 The first transformation, from source code to tokens is called "lexical analysis" or "lexing".
 
+- Current lexer only supports ASCII character set since we use `byte` to store current character. If we need to support full Unicode range or UTF-8 better use rune (aka int32) type which uses 4 bytes(32bits) 
