@@ -88,6 +88,7 @@ func main() {
 	}
 }
 ```
+
 ```
 package main
 
@@ -168,6 +169,7 @@ words := [3]string{
   ```
 
 - `append` function is a variadic function. `func append(slice []Type, elems ...Type) []Type`
+- `a[inclusive_low : exclusive_high]`
 
 ### Variadic functions and Spread operator
 
@@ -214,4 +216,24 @@ ages := mapp[string]int{
 - `len()` function returns number of key-value pairs.
 
 - Mutation operations: insert, get, delete, check if a key exists. 
+
+### Pointers
+- A pointer holds memory address of a value. 
+- `*T` is a pointer to a T value. Its zero value is `nil`.
+```
+var p *int
+
+i := 42
+
+p_i = &i
+
+fmt.Println(*p_i) // reads i through the pointer p_i
+*p = 21 // sets i through the pointer p. AKA "dereferencing" or "indirecting"
+```
+- Unlike C, Go has no pointer arithmetic.
+
+### Structs
+- A `struct` is a collection of fields
+
+
 
