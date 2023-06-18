@@ -1,4 +1,4 @@
-Learning Go
+# Learning Go
 
 - For primitive datatypes we pass a variable by value instead of its reference in function calls. 
 
@@ -302,3 +302,169 @@ p.Scale(10) // OK
 - Two reasons to choose pointer reciever methods
   1. So that method can modify its receivers value.
   2. To avoid copying the value on each method call. This can be more efficient if the receiver is a large struct
+
+
+### Interfaces
+- An interface type is defined as a set of method signatures.
+- The value of interface type can hold any value that implements those methods. 
+- Interfaces are implemented implicitly
+  - We dont need to use `implements` keyword as in other languages.
+
+```
+type Shape interface {
+  Area() float64
+}
+
+type Rect struct {
+  Length float64
+  Breadth float64
+}
+
+func (t T) Area() {
+  return t.Length * t.Breadth
+}
+
+func main() {
+  var rectangle Shape = Rect{ 1.0, 2.0 }
+  rectange.Area()
+
+}
+```
+- Under the hood, interface values can be thought of as a tuple of a value and a concrete type. 
+    `(value, type)`
+
+- calling a method on a interface value executes the method of the same name on its underlying type. https://go.dev/tour/methods/11
+
+- If the concreate value inside the interface is nil, th method will be called with a `nil` receiver. 
+```
+// gracefully handle being called with a nil receiver
+
+func (t *T) M() {
+  if t == nil {
+      fmt.Println("<nil>")
+      return
+    }
+    fmt.Println(t.S)
+}
+```
+- A nil interface value holds neither value nor concrete type. So calling a method on a nil interface is a run time error because there is no type inside the interface to indicate which concrete method to call. 
+
+#### Empty interface
+- interface type with zero methods
+- an empty interface may hold values of any type. (Every type implements at least zero methods.)
+- Empty interfaces are used by code that handles values of unknown type.
+
+#### Type Assertion
+- A **type assertion** provides access to an interface value's underlying concrete value.
+```
+t := i.(T)
+```
+- This statements asserts that the interface value **i** holds the concrete type `T` and assigns the underlying `T` value to the variable `t`.
+- If `i` does not hold a `T`, the statement will trigger a panic. 
+- A type assertion can return two values. --> To test whether an interface value holds a specific type. 
+```
+t, ok := i.(T)
+```
+- If `i` holds a `T`, then `t` will be the underlying value and `ok` will be true
+- Else `t` = zero value of type `T` and `ok` = false and no panic. 
+```
+func main() {
+	var i interface{} = "hello"
+
+	s := i.(string)
+	fmt.Println(s)
+
+	s, ok := i.(string)
+	fmt.Println(s, ok)
+
+	f, ok := i.(float64)
+	fmt.Println(f, ok)
+
+	f = i.(float64) // panic
+	fmt.Println(f)
+}
+
+```
+
+#### Type switches
+- A type switch is a construct that permits several type assertions in series.
+
+
+- A type switch is like a regular switch statement, but the cases in a type switch specify types (not values), and those values are compared against the type of the value held by the given interface value.
+```
+switch v := i.(type) {
+case T:
+    // here v has type T
+case S:
+    // here v has type S
+default:
+    // no match; here v has the same type as i
+}
+```
+
+Ex: 
+```
+func do(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Twice %v is %v\n", v, v*2)
+	case string:
+		fmt.Printf("%q is %v bytes long\n", v, len(v))
+	default:
+		fmt.Printf("I don't know about type %T!\n", v)
+	}
+}
+
+func main() {
+	do(21)
+	do("hello")
+	do(true)
+}
+```
+- https://go.dev/tour/methods/16
+
+#### Stringers
+
+```
+type Stringer interface {
+  String() string
+}
+```
+- A `Stringer` is a type that can describe itself as a string. The fmt package (and many others) look for this interface to print values.
+
+- Stringer is implemented by any value that has a String method, which defines the “native” format for that value. The String method is used to print values passed as an operand to any format that accepts a string or to an unformatted printer such as Print.
+```
+import (
+	"fmt"
+)
+
+// Animal has a Name and an Age to represent an animal.
+type Animal struct {
+	Name string
+	Age  uint
+}
+
+// String makes Animal satisfy the Stringer interface.
+func (a Animal) String() string {
+	return fmt.Sprintf("%v (%d)", a.Name, a.Age)
+}
+
+func main() {
+	a := Animal{
+		Name: "Gopher",
+		Age:  2,
+	}
+	fmt.Println(a)
+}
+```
+
+#### Errors
+- https://go.dev/tour/methods/20 
+
+
+
+# Standard library
+
+## fmt
+- https://pkg.go.dev/fmt#Stringer
+
