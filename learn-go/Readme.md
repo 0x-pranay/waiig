@@ -192,6 +192,7 @@ func main() {
 
 ### Range
 - a syntactic sugar to iterate easily over elements of a slice.
+
 ```
 for INDEX, ELEMENT := range SLICE {
 
@@ -199,7 +200,12 @@ for INDEX, ELEMENT := range SLICE {
 ```
 
 ### Map
-- Similar to js objects. The zero value of a map is `nil`
+
+- Similar to js objects.
+- The zero value of a map is `nil`
+- use `make` function to create a map of given type.
+- map keys can be any datatype which can be comparate
+
 ```
 ages := make(map[string]int)
 ages["John"] = 37
@@ -233,7 +239,66 @@ fmt.Println(*p_i) // reads i through the pointer p_i
 - Unlike C, Go has no pointer arithmetic.
 
 ### Structs
+
 - A `struct` is a collection of fields
+- struct fields are accessed using dot.
+```
+type Token struct {
+  Type string
+  Literal string
+}
 
+func main() {
+  fmt.Println(Token{ "IDENT", "5" })
 
+  tok := Token{ "VARIABLE_DECL", "let" }
+  tok.Literal = "const"
+  fmt.Println(tok.Literal)
+}
+```
 
+### Functions
+- Function in go are first class functions. meaning functions are values too. They can be assigned to a variable, passed as an argument or a function can return another function. 
+- Go functions may be closures. 
+- Closure is a function value that references variables from outside its body.
+
+### Methods
+- GO does not have classes. However, we can define methods on Types. 
+- A method is a function with special receiver argument. 
+- We can declare methods on non-struct types, too.
+
+#### Pointer receivers
+- Methods with pointer receiver can modify the value of which the reciever points.
+These are more common than value recievers. 
+```
+type Vertex struct {
+  X, Y float64
+}
+
+// value receiver
+func (v Vertex) Abs() float64 {
+  return math.Sqrt(v.X*V.X + v.Y * v.Y)
+}
+
+// Pointer reciever
+func (v *Vertex) Scale(f float64) {
+  v.X = v.X * f
+  v.Y = v.Y * f
+}
+
+```
+
+- Methods with pointer recievers take either a value or a pointer as the receiver.
+```
+var v Vertex
+v.Scale(5) // OK
+
+p := &v
+p.Scale(10) // OK
+```
+
+- The same happens for value receiver methods, they can take either apointer or a value as the receiver. 
+
+- Two reasons to choose pointer reciever methods
+  1. So that method can modify its receivers value.
+  2. To avoid copying the value on each method call. This can be more efficient if the receiver is a large struct
