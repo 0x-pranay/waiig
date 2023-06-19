@@ -69,3 +69,9 @@ process of parsing is also called syntactic analysis.
   2. Botton-up parsing
 
 - We are going to write recursive descent parser. Its a top down operator precedence parser, somtimes called "Pratt parser", after its inventor Vaughan Pratt.
+
+#### Recursive-descent parsing
+- `parseProgram` is the entry point and it constructs the root node of the AST (newProgramASTNode())
+- It then builds the child nodes, the statements by calling other function which known which AST node to construct based on current token. 
+- These other functions call each other again, recursiverly. 
+
