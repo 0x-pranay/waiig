@@ -459,6 +459,17 @@ func main() {
 ```
 
 #### Errors
+
+The `error` type is a built-in interface similar to `fmt.Stringer`
+```
+type error interface {
+  Error() string
+}
+```
+- Go program express error state using `error` value. (As with fmt.Stringer, the fmt package looks for the error interface when printing error values. )
+
+- if err != nil  --> denotes success.
+
 - https://go.dev/tour/methods/20 
 
 
