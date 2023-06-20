@@ -472,10 +472,38 @@ type error interface {
 
 - https://go.dev/tour/methods/20 
 
+#### Readers
+- https://go.dev/tour/methods/21
 
+
+
+---
 
 # Standard library
 
 ## fmt
 - https://pkg.go.dev/fmt#Stringer
+- https://pkg.go.dev/fmt@go1.20.5
+### verbs
+
+
+#### General
+
+- `%v`    the value in default format.When printing structs, the plus flag (%+v) adds field names
+- `%#v`  a Go-syntax representation of the value
+- `%T`   Type of the value
+- `%%`   Used to escape percent sign. a literal percent sign.
+
+#### Boolean
+- `%t`    Boolean. The word true or false 
+
+#### Integer
+
+
+
+#### String or Slice of bytes
+
+`%s`    the uninterpreted bytes of string or slice
+`%q`    a double-quoted string safely escaped with Go syntax
+
 
