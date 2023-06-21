@@ -391,6 +391,7 @@ func main() {
 
 
 - A type switch is like a regular switch statement, but the cases in a type switch specify types (not values), and those values are compared against the type of the value held by the given interface value.
+
 ```
 switch v := i.(type) {
 case T:
@@ -473,10 +474,21 @@ type error interface {
 - https://go.dev/tour/methods/20 
 
 #### Readers
+The `io` package specifies the `io.Reader` interface which represents the read end of a stream of data.
+
+Other implementation of this interface, includes files, network connections, compressors, ciphers and others. 
+
+- `io.Reader` interface has `Read` method.
+
+```
+func (T) Read(b []byte) (n int, err error) 
+```
+`Read` populates the given type slice with data and returns the number of bytes populated and an error value. It returns an `io.EOF` error when the stream ends.
+
+
+Example - [reader.go](./reader.go)
+
 - https://go.dev/tour/methods/21
-
-
-
 ---
 
 # Standard library
