@@ -489,6 +489,97 @@ func (T) Read(b []byte) (n int, err error)
 Example - [reader.go](./reader.go)
 
 - https://go.dev/tour/methods/21
+
+
+### Images [TODO](https://go.dev/tour/methods/24)
+
+## Generics
+
+### Type parameters
+
+Go functions can be writtten to work with multiple types using type parameters. 
+
+This type parameter appears between brackets, before the function arguments. 
+
+Syntax:
+```
+func Index[T comparable] (s []T, x T) int
+```
+
+This declaration means
+  `s`   is a slice of type `T` that fulfills built-in constraint `comparable`
+  `x`   is also a value of type `T`
+
+  `comparable`  this is a built-in useful constraint that makes using `==` and `!=` operators possible.
+
+
+Example:
+```
+package main
+
+import "fmt"
+
+// Index returns the index of x in s, or -1 if not found.
+func Index[T comparable](s []T, x T) int {
+	for i, v := range s {
+		// v and x are type T, which has the comparable
+		// constraint, so we can use == here.
+		if v == x {
+			return i
+		}
+	}
+	return -1
+}
+
+func main() {
+	// Index works on a slice of ints
+	si := []int{10, 20, 15, -10}
+	fmt.Println(Index(si, 15))
+
+	// Index also works on a slice of strings
+	ss := []string{"foo", "bar", "baz"}
+	fmt.Println(Index(ss, "hello"))
+}
+```
+
+These above function which supports generic types are called **Generic Function**
+
+Generic functions = Declates both ordinary function parameters + **type parameters**
+
+### Declare type constraint as an Interface
+
+```
+// SumIntsOrFloats sums the values of map m. It supports both int64 and float64
+// as types for map values.
+func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+```
+You declare a type constraint as an interface. The constraint allows any type implementing the interface. For example, if you declare a type constraint interface with three methods, then use it with a type parameter in a generic function, type arguments used to call the function must have all of those methods.
+
+```
+type Number interface {
+    int64 | float64
+}
+
+// SumNumbers sums the values of map m. It supports both integers
+// and floats as map values.
+func SumNumbers[K comparable, V Number](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+```
+
+
+- https://go.dev/doc/tutorial/generics
+
 ---
 
 # Standard library
@@ -518,4 +609,7 @@ Example - [reader.go](./reader.go)
 `%s`    the uninterpreted bytes of string or slice
 `%q`    a double-quoted string safely escaped with Go syntax
 
+## Individual topics
 
+### Go byte
+- https://zetcode.com/golang/byte/
