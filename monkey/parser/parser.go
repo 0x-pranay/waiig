@@ -4,6 +4,7 @@ import (
   "monkey/ast"
   "monkey/lexer"
   "monkey/token"
+  "fmt"
 )
 
 type Parser struct {
@@ -11,10 +12,15 @@ type Parser struct {
 
   curToken token.Token
   peekToken token.Token
+
+  errors []string
 }
 
 func New(l *lexer.Lexer) *Parser {
-  p := &Parser{l : l}
+  p := &Parser{
+    l :     l,
+    errors: []string{},
+  }
   
   // Read two tokens, so curToken and peekToken are both set
   p.nextToken()
@@ -96,12 +102,23 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 // Primary purpose is to enforce the correctness of the order of tokens by checking the type of the next token using `peekToken`.
 // If type if correct then advance to next token using `nextToken`
 // Else return nil. (rightnow) returned nil gets ignored in ParseProgram, which results in entire statement being ignored because of error in input. 
-// TODO: add error handling to our parser here
+// ~TODO~ DONE: add error handling to our parser here
 func (p *Parser) expectPeek(t token.TokenType) bool {
   if p.peekTokenIs(t) {
     p.nextToken()
     return true
   } else {
+    p.peekError(t)
     return false
   }
+}
+
+func (p *Parser) Errors() []string {
+  return p.errors
+}
+
+func (p *Parser) peekError(t token.TokenType) {
+  msg := fmt.Sprintf("expected next token to be %s, got %s instead",
+      t, p.peekToken.Type)
+  p.errors = append(p.errors, msg)
 }
