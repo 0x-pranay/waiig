@@ -4,17 +4,21 @@ import (
   "testing"
   "monkey/ast"
   "monkey/lexer"
+  "fmt"
 )
 
 func TestLetStatements(t *testing.T) {
   input := `
-  let x = 5;
-  let y = 10;
-  let foobar = 98888;
-  `
+let x = 5;
+let y = 10;
+let foobar = 98888;
+`
 
   l := lexer.New(input)
+  
+  // fmt.Println()
   p := New(l)
+  fmt.Println(p)
 
   program := p.ParseProgram()
 
@@ -49,6 +53,7 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
     return false
   }
 
+  // type assertion using interface
   letStmt, ok := s.(*ast.LetStatement)
   
   if !ok {
