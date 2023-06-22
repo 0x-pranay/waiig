@@ -34,7 +34,7 @@ func (p *Parser) ParseProgram() *ast.Program {
   program := &ast.Program{}
   program.Statements = []ast.Statement{}
 
-  for p.curToken.Type != token.EOF {
+  for !p.curTokenIs(token.EOF) {
     stmt := p.parseStatement()
     if stmt != nil {
       program.Statements = append(program.Statements, stmt)
@@ -54,9 +54,17 @@ func (p *Parser) parseStatement() ast.Statement {
   }
 }
 
+// parseLetStatement
+// 1. construct *ast.LetStatement node
+// 2. moves to next token making assertions with expectPeek method. If yes moves to nextToken else return false. 
+// 2a. Expect token.IDENT, then construct *ast.Identifier node
+// 2b. Expect =, and finally jumps over the expression until it encounters a semicolon.
+// 2c. TODO: handle expression
+
 func (p *Parser) parseLetStatement() *ast.LetStatement {
   stmt := &ast.LetStatement{Token: p.curToken}
 
+  // if nextToken is token.IDENT it moves to the nextToken
   if !p.expectPeek(token.IDENT) {
     return nil
   }
@@ -84,6 +92,11 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
   return p.peekToken.Type == t
 }
 
+// an assertion function.
+// Primary purpose is to enforce the correctness of the order of tokens by checking the type of the next token using `peekToken`.
+// If type if correct then advance to next token using `nextToken`
+// Else return nil. (rightnow) returned nil gets ignored in ParseProgram, which results in entire statement being ignored because of error in input. 
+// TODO: add error handling to our parser here
 func (p *Parser) expectPeek(t token.TokenType) bool {
   if p.peekTokenIs(t) {
     p.nextToken()
