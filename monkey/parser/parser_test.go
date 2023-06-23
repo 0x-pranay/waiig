@@ -7,16 +7,16 @@ import (
 )
 
 func TestLetStatements(t *testing.T) {
-//  input := `
-//let x = 5;
-//let y = 10;
-//let foobar = 98888;
-//`
   input := `
-let x  5;
-let  = 10;
-let  98888;
+let x = 5;
+let y = 10;
+let foobar = 98888;
 `
+//   input := `
+// let x  5;
+// let  = 10;
+// let  98888;
+// `
 
   l := lexer.New(input)
   
