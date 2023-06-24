@@ -37,6 +37,10 @@ Expressions come in different form
 
 # TOP DOWN OPERATOR PRECEDENCE (OR PRATT PARSING)
 
+The main idea of Pratt parser is to associate parsing functions (aka "semantic code") with token type. Whenever this token type is encountered, the parsing functions are called to parse the appropriate expressions and return an AST node that represents it. 
+- Each token can type can have up to two parsing functions depending on whethers its prefix or an infix position. 
+
+
 
 
 
