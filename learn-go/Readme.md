@@ -611,5 +611,8 @@ func SumNumbers[K comparable, V Number](m map[K]V) V {
 
 ## Individual topics
 
+- Using generics with structs - https://itnext.io/how-to-use-golang-generics-with-structs-8cabc9353d75
+
+
 ### Go byte
 - https://zetcode.com/golang/byte/
