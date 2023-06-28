@@ -658,6 +658,21 @@ The value of ok is
 
 - Use a `default` case to try a send or receive without blocking
 
+
+### sync.Mutex (Mutual Exclusion)
+
+If we want to update a variable one goroutine( similar to thread) at a time to avoid conflicts. We use "mutex"
+
+Go's standard library provides mutual exclusion (aka. mutex) with `sync.Mutex` and its two methods:
+  - `Lock`
+  - `Unlock`
+
+To make sure only one goroutine gets to access a block of code at any give time, 
+surround that code with `Lock` and `Unlock`.
+`defer` can also be used to unload the mutex.
+
+refer: pessimistic locking example
+
 ---
 
 # Standard library
