@@ -481,7 +481,9 @@ Other implementation of this interface, includes files, network connections, com
 - `io.Reader` interface has `Read` method.
 
 ```
+
 func (T) Read(b []byte) (n int, err error) 
+
 ```
 `Read` populates the given type slice with data and returns the number of bytes populated and an error value. It returns an `io.EOF` error when the stream ends.
 
@@ -577,8 +579,84 @@ func SumNumbers[K comparable, V Number](m map[K]V) V {
 }
 ```
 
+## Concurrency
 
-- https://go.dev/doc/tutorial/generics
+### Goroutines
+
+- A lightweight thread managed by the Go runtime
+  `go f(x, y, z)`
+- evaluation of f,x,y and z heppens in the current thread and the execution of f happends in the new goroutine.
+
+####  Channels
+
+A channel provides a mechanism for concurrently executing functions to communicate by sending and receiving values of a specified element type. The value of an uninitialized channel is nil.
+
+The optional <- operator specifies the channel direction, send or receive.
+
+```
+chan T          // can be used to send and receive values of type T
+chan<- float64  // can only be used to send float64s
+<-chan int      // can only be used to receive ints
+```
+
+A new, initialized channel value can be made using the built-in function make, which takes the channel type and an optional capacity as arguments:
+`make(chan int, 100)`
+
+The capacity, in number of elements, sets the size of the buffer in the channel. If the capacity is zero or absent, the channel is unbuffered and communication succeeds only when both a sender and receiver are ready. Otherwise, the channel is buffered and communication succeeds without blocking if the buffer is not full (sends) or not empty (receives). A nil channel is never ready for communication.
+
+A channel may be closed with the built-in function `close`.
+
+```
+c := make(chan int, 10)
+c <- 5
+// do something
+
+close(c) // closed the channel only sender can close the channel.
+
+c <-10 // will cause panic, cause channel is already closed.
+```
+
+##### Send
+
+```
+ch <- 3  // send value 3 to channel ch
+```
+- A send on an unbuffered channel can proceed if a receiver is ready. 
+- A send on a buffered channel can proceed if there is room in the buffer. 
+- A send on a closed channel proceeds by causing a run-time panic. 
+- A send on a nil channel blocks forever.
+
+##### Receive
+The expression blocks until a value is available. Receiving from a nil channel blocks forever. A receive operation on a closed channel can always proceed immediately, yielding the element type's zero value after any previously sent values have been received.
+
+```
+v1 := <-ch
+v2 = <-ch
+f(<-ch)
+<-strobe  // wait until clock pulse and discard received value
+```
+
+With additional untyped boolean  result reporting whether the communication succeeded.
+```
+x, ok = <-ch
+x, ok := <-ch
+var x, ok = <-ch
+var x, ok T = <-ch
+```
+The value of ok is
+  true if the value received was delivered by a successful send operation to the channel,
+  or
+  false if it is a zero value generated because the channel is closed and empty.
+
+
+### Select
+
+- this statements lets a goroutine wait on multiple communication operations. 
+- A `select` blocks until one of its cases can run, then it executes that case.
+- It chooses one at random if multiple are ready. ( TODO: further reading required)
+- The `default` case in a select is run if no other case is ready.
+
+- Use a `default` case to try a send or receive without blocking
 
 ---
 
@@ -612,6 +690,8 @@ func SumNumbers[K comparable, V Number](m map[K]V) V {
 ## Individual topics
 
 - Using generics with structs - https://itnext.io/how-to-use-golang-generics-with-structs-8cabc9353d75
+- Go concurrency patterns  by Rob Pike, Google I/O 2012 - https://www.youtube.com/watch?v=f6kdp27TYZs
+
 
 
 ### Go byte
